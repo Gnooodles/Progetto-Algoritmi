@@ -60,11 +60,9 @@ void heapify(int *H, int i){
     }
 }
 
-void buildMaxHeap(int *H){
+void buildMaxHeap(int *H, int n){
 
-    int heapsize = scanArray(H);
-    // Build max heap
-    for (int i = heapsize / 2 - 1; i >= 0; i--){
+    for (int i = n / 2 - 1; i >= 0; i--){
         heapify(H, i);
     }
 }
@@ -99,6 +97,12 @@ int extractMaxHeap(int *H){
     } else {
         return INT_MIN;
     }
+}
+
+void heapSelect(int *H, int n, int k){
+
+    //TODO:
+    
 }
 //----------------------------------------------------------------------------------------------------------------------
 
