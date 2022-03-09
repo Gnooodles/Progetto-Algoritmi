@@ -36,12 +36,25 @@ void swap(int *x, int *y){
 
 //-------------------------------------------------------------------------------------------------------
 
+int left(int i){
+ return 2*i+1;
+}
+
+int rigth(int i){
+ return 2*i+2;
+}
+
+int parent(int i){
+ return (int)(i-1/2);
+}
+
+
 void heapify(int *H, int i){
 
     int heapsize = scanArray(H);
 
-    int l = 2 * i + 1;
-    int r = 2 * i + 2;
+    int l = left(i);
+    int r = right(i);
     int m;
 
     if (l <= heapsize && H[l] > H[i]){
