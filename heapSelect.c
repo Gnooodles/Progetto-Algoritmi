@@ -34,24 +34,30 @@ void swap(int *x, int *y){
     *y = t;
 }
 
+void swap2(int *H, int x, int y) {
+    int temp = H[x];
+    H[x] = H[y];
+    H[y] = temp;
+}
+
 //-------------------------------------------------------------------------------------------------------
 
 int left(int i){
  return 2*i+1;
 }
 
-int rigth(int i){
+int right(int i){
  return 2*i+2;
 }
 
 int parent(int i){
- return (int)(i-1/2);
+ return (int)((i-1)/2);
 }
 
 
-void heapify(int *H, int i){
+void heapify(int *H, int i, int heapsize){
 
-    int heapsize = scanArray(H);
+    //int heapsize = scanArray(H);
 
     int l = left(i);
     int r = right(i);
@@ -68,15 +74,15 @@ void heapify(int *H, int i){
     }
 
     if (m != i){
-        swap(&m, &i);
-        heapify(H, m);
+        swap2(H, m, i);
+        heapify(H, m, heapsize);
     }
 }
 
 void buildMaxHeap(int *H, int n){
 
     for (int i = n / 2 - 1; i >= 0; i--){
-        heapify(H, i);
+        heapify(H, i, n);
     }
 }
 
@@ -92,7 +98,7 @@ void heapInsert(int *H, int k){
         int p = parent(i);
 
         while( i > 0 && H[i] > H[p] ){
-            swap(&i,&p);
+            swap2(H,i,p);
             i = parent(i);
         }
     }
@@ -102,9 +108,9 @@ int extractMaxHeap(int *H){
     int heapsize = scanArray(H);
 
     if( heapsize > 0){
-        swap(1,&heapsize);
+        swap2(H,1,heapsize);
         heapsize = heapsize - 1;
-        heapify(H,1);
+        heapify(H,1, heapsize);
 
         return H[heapsize + 1];
     } else {
@@ -131,9 +137,18 @@ int main(){
 
     int n = scanArray(a); //Leggo da una riga di input un array
 
-    build(a,n);
+    buildMaxHeap(a,n);
 
     printArray(a, n);
+    
+    //printf("\n%d", parent(5));
+    printf("\n");
+    //swap2(a,0,1);
+
+
+
+
+
 
     return 0;
 }
