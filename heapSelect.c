@@ -63,36 +63,37 @@ void heapify(int *H, int i, int heapsize){
     int r = right(i);
     int m;
 
-    if (l <= heapsize && H[l] > H[i]){
+    if (l < heapsize && H[l] > H[i]){
         m = l;
     }else{
         m = i;
     }
 
-    if (r <= heapsize && H[r] > H[m]){
+    if (r < heapsize && H[r] > H[m]){
         m = r;
     }
 
     if (m != i){
-        swap2(H, m, i);
+        swap2(H, i, m);
         heapify(H, m, heapsize);
     }
 }
 
-void buildMaxHeap(int *H, int n){
+int *buildMaxHeap(int *H, int n){
 
     for (int i = n / 2 - 1; i >= 0; i--){
         heapify(H, i, n);
     }
+    return *H;
 }
 
-void heapInsert(int *H, int k){
+void heapInsert(int *H, int k, int heapsize){
 
-    int heapsize = scanArray(H);
+    // int heapsize = scanArray(H);
 
     if( heapsize < sizeof(H) ){
         heapsize = heapsize + 1;
-        H[heapsize] = k;
+        H[heapsize - 1] = k;
         int i = heapsize;
 
         int p = parent(i);
@@ -104,24 +105,26 @@ void heapInsert(int *H, int k){
     }
 }
 
-int extractMaxHeap(int *H){
-    int heapsize = scanArray(H);
+int extractMaxHeap(int *H, int heapsize){
 
     if( heapsize > 0){
-        swap2(H,1,heapsize);
-        heapsize = heapsize - 1;
-        heapify(H,1, heapsize);
 
-        return H[heapsize + 1];
+       int max = H[0];
+       H[0] = H[heapsize - 1];
+       heapify(H,0,heapsize);
+
+        return max;
+
     } else {
         return INT_MIN;
     }
 }
 
-void heapSelect(int *H, int n, int k){
-
-    //TODO:
+int heapSelect(int *a, int k, int heapsize){
     
+    int b[5000];                                         //vettore per heap ausiliaria
+    int *H1 = buildMaxHeap(a, heapsize);
+    int *H2 = buildMaxHeap(b, 0);
 }
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -137,18 +140,26 @@ int main(){
 
     int n = scanArray(a); //Leggo da una riga di input un array
 
+    //Costruzione max heap
     buildMaxHeap(a,n);
 
     printArray(a, n);
     
-    //printf("\n%d", parent(5));
     printf("\n");
-    //swap2(a,0,1);
 
+    //Estrazione massimo
+    printf("Il massimo è: ");
+    int k = extractMaxHeap(a,n);
+    printf("%d\n",k);
+    printArray(a, n);
 
+    printf("\n");
 
+    //Inserimento chiave
+    heapInsert(a, 10, n);
+    printArray(a,n);
 
-
+    printf("\n");
 
     return 0;
 }
