@@ -159,24 +159,24 @@ int heapSelect(int *A, int n, int k)
         //printArray(H2,n2);
         int min = extractMin(H2,n2);
         n2--;
-        printf("\n -->h2 dopo estraz");
-        printArray(H2,n2);
+        //printf("\n -->h2 dopo estraz");
+        //printArray(H2,n2);
 
         //inserisco i figli sinistrto e destro in H2
         if (left(i) < n)
         {
             insert(H2,A[left(i)],n2);
             n2++;
-            printf("\n -->h2 dopo ins sx ");
-            printArray(H2,n2);
+            //printf("\n -->h2 dopo ins sx ");
+            //printArray(H2,n2);
         }
         
         if (right(i) < n)
         {
             insert(H2,A[right(i)],n2);
             n2++;
-            printf("\n -->h2 dopo ins dx ");
-            printArray(H2,n2);
+            //printf("\n -->h2 dopo ins dx ");
+            //printArray(H2,n2);
         }
     }
 
