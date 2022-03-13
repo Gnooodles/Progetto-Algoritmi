@@ -61,15 +61,13 @@ void heapify(int *H, int i, int heapsize){
 
     int l = left(i);
     int r = right(i);
-    int m;
+    int m=i;
 
-    if (l <= heapsize && H[l] > H[i]){
+    if (l < heapsize && H[l] > H[m]){
         m = l;
-    }else{
-        m = i;
     }
 
-    if (r <= heapsize && H[r] > H[m]){
+    if (r < heapsize && H[r] > H[m]){
         m = r;
     }
 
@@ -81,7 +79,7 @@ void heapify(int *H, int i, int heapsize){
 
 void buildMaxHeap(int *H, int n){
 
-    for (int i = n / 2 - 1; i >= 0; i--){
+    for (int i = n / 2 +1 ; i >= 0; i--){
         heapify(H, i, n);
     }
 }
@@ -104,13 +102,12 @@ void heapInsert(int *H, int k){
     }
 }
 
-int extractMaxHeap(int *H){
-    int heapsize = scanArray(H);
+int extractMaxHeap(int *H, int heapsize){
 
-    if( heapsize > 0){
-        swap2(H,1,heapsize);
+    if( heapsize >= 0){
+        swap2(H,0,heapsize);
         heapsize = heapsize - 1;
-        heapify(H,1, heapsize);
+        heapify(H,0, heapsize);
 
         return H[heapsize + 1];
     } else {
@@ -137,16 +134,17 @@ int main(){
 
     int n = scanArray(a); //Leggo da una riga di input un array
 
-    buildMaxHeap(a,n);
+    buildMaxHeap(a,n); //funziona
 
     printArray(a, n);
     
     //printf("\n%d", parent(5));
     printf("\n");
     //swap2(a,0,1);
+    printf("%d", extractMaxHeap(a,n));
 
-
-
+    printf("\n");
+    //printArray(a, n);
 
 
 
