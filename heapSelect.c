@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int INT_MIN = -9999;
-
 // Codice per leggere un Array da input
 
 #define MAX_LINE_SIZE 1000 // maximum size of a line of input
@@ -27,113 +25,112 @@ int scanArray(int *a){
     return size;
 }
 
-void swap(int *x, int *y){
-    int t;
-    t = *x;
+// ritorna l'indice del nodo genitore
+int parent(int i) {
+    return (i - 1) / 2;
+}
+
+// ritorna l'indice del figlio sx
+int left_child(int i) {
+    return 2*i + 1;
+}
+
+// ritorna l'indice del figlio dx
+int right_child(int i) {
+    return 2*i + 2;
+}
+
+void swap(int *x, int *y) {
+    int temp = *x;
     *x = *y;
-    *y = t;
+    *y = temp;
 }
 
-void swap2(int *H, int x, int y) {
-    int temp = H[x];
-    H[x] = H[y];
-    H[y] = temp;
-}
-
-//-------------------------------------------------------------------------------------------------------
-
-int left(int i){
- return 2*i+1;
-}
-
-int right(int i){
- return 2*i+2;
-}
-
-int parent(int i){
- return (int)((i-1)/2);
-}
-
-
-void heapify(int *H, int i, int heapsize){
-
-    //int heapsize = scanArray(H);
-
-    int l = left(i);
-    int r = right(i);
-    int m;
-
-    if (l < heapsize && H[l] > H[i]){
-        m = l;
-    }else{
-        m = i;
+// insert the item at the appropriate position
+void insert(int a[], int data, int *n) {
+    if (*n >= MAX_LINE_SIZE) {
+        printf("%s\n", "The heap is full. Cannot insert");
+        return;
     }
+    // first insert the time at the last position of the array 
+    // and move it up
+    a[*n] = data;
+    *n = *n + 1;
 
-    if (r < heapsize && H[r] > H[m]){
-        m = r;
-    }
 
-    if (m != i){
-        swap2(H, i, m);
-        heapify(H, m, heapsize);
+    // move up until the heap property satisfies
+    int i = *n - 1;
+    while (i != 0 && a[parent(i)] < a[i]) {
+        swap(&a[parent(i)], &a[i]);
+        i = parent(i);
     }
 }
 
-int *buildMaxHeap(int *H, int n){
+// moves the item at position i of array a
+// into its appropriate position
+void max_heapify(int a[], int i, int n){
+    // find left child node
+    int left = left_child(i);
 
-    for (int i = n / 2 - 1; i >= 0; i--){
-        heapify(H, i, n);
+    // find right child node
+    int right = right_child(i);
+
+    // find the largest among 3 nodes
+    int largest = i;
+
+    // check if the left node is larger than the current node
+    if (left <= n && a[left] > a[largest]) {
+        largest = left;
     }
-    return *H;
-}
 
-void heapInsert(int *H, int k, int heapsize){
-
-    // int heapsize = scanArray(H);
-
-    if( heapsize < sizeof(H) ){
-        heapsize = heapsize + 1;
-        H[heapsize - 1] = k;
-        int i = heapsize;
-
-        int p = parent(i);
-
-        while( i > 0 && H[i] > H[p] ){
-            swap2(H,i,p);
-            i = parent(i);
-        }
+    // check if the right node is larger than the current node
+    if (right <= n && a[right] > a[largest]) {
+        largest = right;
     }
-}
 
-int extractMaxHeap(int *H, int heapsize){
-
-    if( heapsize > 0){
-
-       int max = H[0];
-       H[0] = H[heapsize - 1];
-       heapify(H,0,heapsize);
-
-        return max;
-
-    } else {
-        return INT_MIN;
+    // swap the largest node with the current node 
+    // and repeat this process until the current node is larger than 
+    // the right and the left node
+    if (largest != i) {
+        int temp = a[i];
+        a[i] = a[largest];
+        a[largest] = temp;
+        max_heapify(a, largest, n);
     }
+
 }
 
-int heapSelect(int *a, int k, int heapsize){
-    
-    int b[5000];                                         //vettore per heap ausiliaria
-    int *H1 = buildMaxHeap(a, heapsize);
-    int *H2 = buildMaxHeap(b, 0);
+// converts an array into a heap
+void buildMaxHeap(int a[], int n) {
+    int i;
+    for (i = n/2; i >= 0; i--) {
+        max_heapify(a, i, n);
+    } 
 }
-//----------------------------------------------------------------------------------------------------------------------
 
-void printArray(int *a, int n){
-    for (int i = 0; i < n; i++)
-    {
+// deletes the max item and return
+int extract_max(int a[], int *n) {
+    int max_item = a[0];
+
+    // replace the first item with the last item
+    a[0] = a[*n - 1];
+    *n = *n - 1;
+
+    // maintain the heap property by heapifying the 
+    // first item
+    max_heapify(a, 0, *n);
+    return max_item;
+}
+
+// prints the heap
+void print_heap(int a[], int n) {
+    int i;
+    for (i = 0; i < n; i++) {
         printf("%d ", a[i]);
     }
+    printf("\n");
 }
+
 
 int main(){
     int a[1000];
@@ -143,21 +140,21 @@ int main(){
     //Costruzione max heap
     buildMaxHeap(a,n);
 
-    printArray(a, n);
+    print_heap(a, n);
     
     printf("\n");
 
     //Estrazione massimo
     printf("Il massimo è: ");
-    int k = extractMaxHeap(a,n);
+    int k = extract_max(a,&n);
     printf("%d\n",k);
-    printArray(a, n);
+    print_heap(a, n);
 
     printf("\n");
 
     //Inserimento chiave
-    heapInsert(a, 10, n);
-    printArray(a,n);
+    insert(a, 10, &n);
+    print_heap(a,n);
 
     printf("\n");
 
