@@ -178,7 +178,7 @@ int getMin(int *H)
 
 
 
-int heapSelect3(int *A, int n, int k)
+int heapSelect(int *A, int n, int k)
 {
     // creo H1 min heap da vettore A
     buildMinHeap(A, n); // theta(n)
@@ -193,38 +193,24 @@ int heapSelect3(int *A, int n, int k)
     for (int i = 0; i < k; i++) // theta(k)
     {
         // estrae la radice di H2
-        // printf("\n -->h2 prima estraz ");
-        // printArray(H2,n2);
         int index = extractMin(H2, n2, A);
         n2--;
-        //printf("\n -->h2 dopo estraz");
-        //printArray(H2, n2);
-
-        // cerco l'indice del nodo estratto in H1
-
-        // printf("\n -->array di partenza diove cercare l'indice sotto: ");
-        // printArray(A,n);
-        // printf("\n -->indice calcolato per l e r: %d", index);
 
         // inserisco i figli sinistro e destro del nodo appena estratto in H2
         if (left(index) < n)
         {
             insert(H2, left(index), n2,A);
             n2++;
-            //printf("\n -->h2 dopo ins sx ");
-            //printArray(H2, n2);
         }
 
         if (right(index) < n)
         {
             insert(H2, right(index), n2,A);
             n2++;
-            //printf("\n -->h2 dopo ins dx ");
-            //printArray(H2, n2);
         }
     }
 
-    // prendo il minimo di H2 che corrisponde al k-esimo elemento se ordinassi l'array
+
     return A[getMin(H2)];
 }
 
@@ -232,35 +218,7 @@ int heapSelect3(int *A, int n, int k)
 
 int main(int argc, char const *argv[])
 {
-    /* PROVE MIN HEAP
-    // int a[1000];
-    // usando un allocazione di memoria per l'array in modo che sia dinamico
-    int *a = malloc(1000 * sizeof(int));
-
-    int n = scanArray(a); // Leggo da una riga di input un array
-    // printf("%d\n", n);
-    buildMinHeap(a, n); // funziona
-    printArray(a, n);
-
-
-        a[4] = 12121;
-        printf("\n");
-        printArray(a, n+1);
-        */
-
-    // inserisco 1 nella heap [2 3 6 4]
-    /*
-    insert(a, 1, n);
-    n++;
-    printf("\n");
-    printArray(a, n);
-
-    printf("\n%d", extractMin(a,n));
-    n--;
-    printf("\n");
-    printArray(a, n);
-
-    */
+    
 
     // HEAP SELECT
     int *a = malloc(10000 * sizeof(int));
@@ -268,7 +226,7 @@ int main(int argc, char const *argv[])
     int k;
     scanf("%d", &k);
 
-    int res = heapSelect3(a, n, k-1);
+    int res = heapSelect(a, n, k-1);
 
     printf("%d", res);
 
