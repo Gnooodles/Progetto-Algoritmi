@@ -5,7 +5,7 @@ int INT_MIN = -9999;
 
 // Codice per leggere un Array da input
 
-#define MAX_LINE_SIZE 1000 // maximum size of a line of input
+#define MAX_LINE_SIZE 10000 // maximum size of a line of input
 
 int scanArray(int *a)
 {
@@ -91,6 +91,43 @@ void minHeapify(int *H, int i, int heapsize)
     }
 }
 
+void minHeapify2(int *H2, int i, int heapsize, int *A)
+{
+    int l = left(i);
+    int r = right(i);
+    int m = i;
+
+    if (l < heapsize && A[H2[l]] < A[H2[m]])
+    {
+        m = l;
+    }
+
+    if (r < heapsize && A[H2[r]] < A[H2[m]])
+    {
+        m = r;
+    }
+
+    if (m != i)
+    {
+        swap2(H2, m, i);
+        minHeapify2(H2, m, heapsize, A);
+    }
+}
+
+void fixUp(int *H, int i, int heapsize)
+{
+    int p = parent(i);
+    if (i <= 0)
+    {
+        return;
+    }
+    else if (H[p] > H[i])
+    {
+        swap2(H, p, i);
+        fixUp(H, p, heapsize);
+    }
+}
+
 void buildMinHeap(int *H, int n)
 {
     for (int i = n - 1; i >= 0; i--)
@@ -99,7 +136,7 @@ void buildMinHeap(int *H, int n)
     }
 }
 
-void insert(int *H, int k, int heapsize)
+void insert(int *H, int k, int heapsize, int *A)
 {
     heapsize = heapsize + 1;
     H[heapsize - 1] = k;
@@ -107,7 +144,7 @@ void insert(int *H, int k, int heapsize)
 
     int p = parent(i);
 
-    while (i > 0 && H[i] < H[p])
+    while (i > 0 && A[H[i]] < A[H[p]])
     {
         swap2(H, i, p);
         i = p;
@@ -115,13 +152,13 @@ void insert(int *H, int k, int heapsize)
     }
 }
 
-int extractMin(int *H, int heapsize)
+int extractMin(int *H, int heapsize, int *A)
 {
     if (heapsize >= 0)
     {
         swap2(H, 0, heapsize - 1);
         heapsize = heapsize - 1;
-        minHeapify(H, 0, heapsize);
+        minHeapify2(H, 0, heapsize, A);
 
         return H[heapsize];
     }
@@ -137,56 +174,59 @@ int getMin(int *H)
 }
 
 //----------------------------------------------------------------
-// HEAP SELECT
+// HEAP SELECT GIUSTO 
 
-int heapSelect(int *A, int n, int k)
+
+
+int heapSelect3(int *A, int n, int k)
 {
-    //creo H1 min heap da vettore A
-    buildMinHeap(A,n);
+    // creo H1 min heap da vettore A
+    buildMinHeap(A, n); // theta(n)
 
-    //creo H2 min heap che contiene solo radice di H1
-    int *H2 = malloc(n * sizeof(int));
+    // creo H2 min heap che contiene solo radice di H1
+    int *H2 = malloc(10000 * sizeof(int));
     int n2 = 0;
-    //H2[0] = getMin(A);
-    insert(H2,getMin(A),n2);
+    H2[0] = 0;
     n2++;
 
-    //iterazioni
-    for (int i = 0; i < k; i++)
+    // iterazioni
+    for (int i = 0; i < k; i++) // theta(k)
     {
-        //estrae la radice di H2
-        //printf("\n -->h2 prima estraz ");
-        //printArray(H2,n2);
-        int min = extractMin(H2,n2);
+        // estrae la radice di H2
+        // printf("\n -->h2 prima estraz ");
+        // printArray(H2,n2);
+        int index = extractMin(H2, n2, A);
         n2--;
         //printf("\n -->h2 dopo estraz");
-        //printArray(H2,n2);
+        //printArray(H2, n2);
 
-        //inserisco i figli sinistrto e destro in H2
-        if (left(i) < n)
+        // cerco l'indice del nodo estratto in H1
+
+        // printf("\n -->array di partenza diove cercare l'indice sotto: ");
+        // printArray(A,n);
+        // printf("\n -->indice calcolato per l e r: %d", index);
+
+        // inserisco i figli sinistro e destro del nodo appena estratto in H2
+        if (left(index) < n)
         {
-            insert(H2,A[left(i)],n2);
+            insert(H2, left(index), n2,A);
             n2++;
             //printf("\n -->h2 dopo ins sx ");
-            //printArray(H2,n2);
+            //printArray(H2, n2);
         }
-        
-        if (right(i) < n)
+
+        if (right(index) < n)
         {
-            insert(H2,A[right(i)],n2);
+            insert(H2, right(index), n2,A);
             n2++;
             //printf("\n -->h2 dopo ins dx ");
-            //printArray(H2,n2);
+            //printArray(H2, n2);
         }
     }
 
-    //prendo il minimo di H2 che corrisponde al k-esimo elemento se ordinassi l'array
-    return getMin(H2);
-    
-
-
+    // prendo il minimo di H2 che corrisponde al k-esimo elemento se ordinassi l'array
+    return A[getMin(H2)];
 }
-
 
 
 
@@ -223,15 +263,14 @@ int main(int argc, char const *argv[])
     */
 
     // HEAP SELECT
-    int *a = malloc(1000 * sizeof(int));
+    int *a = malloc(10000 * sizeof(int));
     int n = scanArray(a); // Leggo da una riga di input un array
     int k;
     scanf("%d", &k);
 
-    int res = heapSelect(a,n,k-1);
+    int res = heapSelect3(a, n, k-1);
 
-    printf("il %d-esimo elemento è:%d", k, res);
-
+    printf("%d", res);
 
     return 0;
 }
