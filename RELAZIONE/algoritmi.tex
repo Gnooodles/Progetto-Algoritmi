@@ -2,6 +2,12 @@
 ??????
 
 \subsection{QuickSelect}
-Si tratta di una variante dell’algoritmo di 
-ordinamento "quick sort", in cui ogni chiamata ricorsiva su un intervallo [i,j] del vettore fornito in input termina in tempo costante ogni volta che il parametro k, relativo alla posizione dell’elemento da cercare, non sia contenuto tra gli indici i e j
-
+L'algoritmo QuickSelect si basa sull'algoritmo di ordinamento QuickSort
+ogni chiamata ricorsiva, sull'intervallo definito tra \textit{i} e \textit{j}
+del vettore fornito in input, termina in tempo costante ogni volta che il parametro \textit{k}, relativo
+alla posizione dell'elemento da cercare, non sia contenuto tra gli indici
+\textit{i} e \textit{j}.
+L'algoritmo QuickSelect sfrutta la funzione \textit{partition} che utilizza l'ultimo elemento dell'intervallo come perno per partizionare l'array in due sottoarray
+tali che ogni elemento del primo sia minore o uguale 
+ad ogni elemento del secondo. Quindi procede ricorsivamente, richiamando la procedura quickSortSelection sul sotto-array contenente l’elemento in posizione k. Esso terminerà quando la procedura partition restituirà l’indice cercato, ovvero k.
+L’algoritmo ha complessità temporale asintotica $\Theta(n^2)$ nel caso pessimo e $O(n)$ nel caso medio, dove n è il numero di elementi dell’array.
