@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int INT_MIN = -9999;
 
@@ -129,7 +130,22 @@ void printArray(int *a, int n){
     }
 }
 
+double duration(struct timespec start, struct timespec end) {
+    return end.tv_sec - start.tv_sec
+         + ((end.tv_nsec - start.tv_nsec ) / (double) 1000000000.0);
+}
+double getResolution(){
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    do {
+        
+        clock_gettime(CLOCK_MONOTONIC, &end);
+    } while (duration(start, end) == 0.0);
+    return duration(start, end);
+}
+
 int main(){
+    /*
     int a[1000];
 
     int n = scanArray(a); //Leggo da una riga di input un array
@@ -144,7 +160,8 @@ int main(){
     printf("%d", extractMaxHeap(a,n));
 
     printf("\n");
-    //printArray(a, n);
+    //printArray(a, n);*/
+
 
 
 

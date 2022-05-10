@@ -1,0 +1,41 @@
+\section{Scelte Implementative}
+Di seguito esponiamo le principali scelte implementative adottate nella realizzazione del codice per la misurazione empirica dei tempi di esecuzione, riportando brevemente an- che i principi di funzionamento alla base degli algoritmi di selezione. Inoltre, verranno sottolineate le differenze che caratterizzano le varianti di uno stesso processo di selezione.
+
+\subsection{Aspetti generali}
+?????
+
+\subsection{Generatore test}
+??????
+
+\subsection{Clock e tempo minimo di esecuzione}
+Prima di poter procedere al calcolo vero e proprio dei tempi di esecuzione, abbiamo dovuto 
+ricavare la risoluzione del clock di sistema, 
+indispensabile per il controllo degli errori
+di misura.
+Pertanto, è stata usata la funzione \textit{\itshape clock\_gettime}  della libreria time.h che,
+grazie all’opzione \textsc{\scshape clock\_monotonic} , permette l’utilizzo di un orologio di tipo monotono.
+Ottenuta dunque la risoluzione, ricavata dalla mediana di un buon numero di misurazioni,
+è possibile calcolare un tempo minimo di esecuzione che assicuri l’accuratezza richiesta.
+In particolare, si procede ad applicare la seguente formula 
+$T_{min} \leq res\times(1+\frac{1}{\epsilon})$
+così da garantire la massimizzazione dell’errore relativo . È importante specificare che l’errore usato per i 
+calcoli corrisponde in realtà alla metà dell’errore relativo richiesto. Ciò sarà necessario per rispettare i 
+limiti indicati nella consegna quando andremo ad effettuare i calcoli finali.
+
+\subsection{Rilevazione tempi di esecuzione}
+All’interno dei due cicli for innestati della procedura principale, viene rilevato il 
+tempo di esecuzione di uno degli algoritmi su un vettore di dimensione e seme di generazione 
+prestabiliti. La misurazione vera e propria è effettuata dalla funzione \textit{\itshape getExecutionTimes}.
+Questa, in base agli argomenti ricevuti, provvede a ripetere il processo di misurazione per il 
+numero di volte richiesto, restituendo alla fine la serie dei tempi registrarti. 
+Ogni iterazione, in seguito alla corretta generazione di un array di input, consiste nella copiatura 
+di quest’ultimo e nell’esecuzione dell’algoritmo di selezione, ripetendo eventualmente questi due passaggi 
+fino al raggiungimento del tempo minimo di esecuzione precedentemente discusso o al superamento del tempo 
+limite imposto dall’utente. Questo è un’indicazione del tempo massimo che l’utente è disposto ad aspettare 
+per l’intero processo di misurazione sullo specifico input e ha lo scopo di evitare lunghe attese nel caso di 
+algoritmi inefficienti o errati. In particolare, nel caso in cui questa limitazione venga superata, la procedura 
+restituirà il valore \textsc{\scshape null} .
+
+\subsection{Tempo generazione vettore}
+
+\subsection{Calcoli finali ed outputs}

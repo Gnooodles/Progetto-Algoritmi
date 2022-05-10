@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <time.h>
 #include <math.h>
 // Codice per leggere un Array da input
 
@@ -133,8 +134,54 @@ void medianSelect(int *array, int p, int q, int k){
 
 
 
+int randint(int n) {
+  
+    
+
+    // Chop off all of the values that would cause skew...
+    int end = RAND_MAX / n; // truncate skew
+
+    end *= n;
+
+    // ... and ignore results from rand() that fall above that limit.
+    // (Worst case the loop condition should succeed 50% of the time,
+    // so we can expect to bail out of this loop pretty quickly.)
+    int r;
+    while ((r = rand()) >= end);
+
+    return r % n;
+  
+}
+
+
+int *creaArray(int lunghezza) {
+    int *a = malloc(lunghezza * sizeof(int));
+    for (int i = 0; i < lunghezza; i++)
+    {
+        a[i] =  randint(100000);
+    }
+    return a;
+    
+}
+
+double duration(struct timespec start, struct timespec end) {
+    return end.tv_sec - start.tv_sec
+         + ((end.tv_nsec - start.tv_nsec ) / (double) 1000000000.0);
+}
+double getResolution(int *a, int n, int k){
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    do {
+        medianSelect(a,0,n,k);
+        clock_gettime(CLOCK_MONOTONIC, &end);
+    } while (duration(start, end) == 0.0);
+    return duration(start, end);
+}
+
+
 int main(int argc, char const *argv[])
 {
+	/*
     int a[ MAX_LINE_SIZE] = {};
 	int len = scanArray(a,  MAX_LINE_SIZE);
 	int p = 0;
@@ -142,6 +189,13 @@ int main(int argc, char const *argv[])
 	//quickSortSelection(a, len, p-1);
 	//minheapSelection(a, len, p);
 	 medianSelect(a, 0, len -1, p-1);
+	 */
+
+
+	int *a = creaArray(5000000);
+    int k = randint(100000);
+    printf("%f\n", getResolution(a,5000000,k));
+
     return 0;
 }
 
