@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+
 #define INT_MIN -999999
 #define MAX_LINE_SIZE 10000
 
@@ -82,14 +86,67 @@ int quickSelect(int *a, int i, int j, int k)
     }
 }
 
+
+
+int randint(int n) {
+  
+    
+
+    // Chop off all of the values that would cause skew...
+    int end = RAND_MAX / n; // truncate skew
+
+    end *= n;
+
+    // ... and ignore results from rand() that fall above that limit.
+    // (Worst case the loop condition should succeed 50% of the time,
+    // so we can expect to bail out of this loop pretty quickly.)
+    int r;
+    while ((r = rand()) >= end);
+
+    return r % n;
+  
+}
+
+int *creaArray(int lunghezza) {
+    int *a = malloc(lunghezza * sizeof(int));
+    for (int i = 0; i < lunghezza; i++)
+    {
+        a[i] =  randint(100000);
+    }
+    return a;
+    
+}
+
+double duration(struct timespec start, struct timespec end) {
+    return end.tv_sec - start.tv_sec
+         + ((end.tv_nsec - start.tv_nsec ) / (double) 1000000000.0);
+}
+double getResolution(int *a, int n, int k){
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    do {
+        quickSelect(a,0,n,k);
+        clock_gettime(CLOCK_MONOTONIC, &end);
+    } while (duration(start, end) == 0.0);
+    return duration(start, end);
+}
+
+
+
 int main(int argc, char const *argv[])
 {
+    /*
     int s[10000];
     int n = scanArray(s);
     int k;
     scanf("%d", &k);
     int i = quickSelect(s, 0, n, k);
     printf("%d", i);
+    */
+
+    int *a = creaArray(1000000000);
+    int k = randint(100000);
+    printf("%f\n", getResolution(a,1000000000,k));
 
     return 0;
 }
